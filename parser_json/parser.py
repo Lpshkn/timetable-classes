@@ -18,6 +18,50 @@ CLASSROOM_INDEX = 2
 IS_COMPUTER_INDEX = 3
 
 
+def parse_teachers(list_info):
+    """Gets a list of teachers with attributes"""
+    teachers = []
+    if len(list_info) != 0:
+        for info in list_info:
+            if len(info) != 0:
+                name = info[NAME_INDEX]
+                attributes = [info[GROUPS_INDEX], info[CLASSROOM_INDEX], info[IS_COMPUTER_INDEX]]
+                teachers.append(Teacher(name, attributes))
+    return tuple(teachers) or None
+
+
+def parse_notes(list_notes: dict):
+    """Gets a list of notes classes like 'title' : list_of_teachers_with_attributes """
+    notes = []
+    for title, value in list_notes.items():
+        teachers = parse_teachers(value)
+        note = Note(title, teachers)
+        notes.append(note)
+    return tuple(notes)
+
+
+def parse_json(json_object: DataJson):
+    """Function parses json object to a list of days"""
+    days = []
+    for date, value in json_object.json.items():
+        notes = parse_notes(value)
+        day = Day(date, value)
+        days.append(day)
+    return tuple(days)
+
+
+class Day:
+    def __init__(self, date, notes):
+        self.date = date
+        self.notes = notes
+
+
+class Note:
+    def __init__(self, title, teachers):
+        self.title = title
+        self.teachers = teachers
+
+
 class Teacher:
     """Contains information about the teacher"""
 
@@ -32,31 +76,3 @@ class Teacher:
 
     def __repr__(self):
         return self.__str__()
-
-
-def parse_teachers(list_info):
-    """Gets a list of teachers with attributes"""
-    teachers = []
-    if len(list_info) != 0:
-        for info in list_info:
-            if len(info) != 0:
-                name = info[NAME_INDEX]
-                attributes = [info[GROUPS_INDEX], info[CLASSROOM_INDEX], info[IS_COMPUTER_INDEX]]
-                teachers.append(Teacher(name, attributes))
-    return teachers or None
-
-
-def parse_notes(list_notes: dict):
-    """Gets a list of notes classes like 'title' : list_of_teachers_with_attributes """
-    notes = {}
-    for title, value in list_notes.items():
-        notes[title] = parse_teachers(value)
-    return notes
-
-
-def parse_json(json_object: DataJson):
-    """Function parses json object to a list of days"""
-    days = {}
-    for date, value in json_object.json.items():
-        days[date] = parse_notes(value)
-    return days

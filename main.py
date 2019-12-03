@@ -1,11 +1,11 @@
 from parser_json.parser import Teacher
 from read_data.data_json import DataJson
-from parser_json.parser import Timetable
+from parser_json.parser import parse_json
 import json
 
 jsonObj = DataJson('./resources/test.json')
-tt = Timetable(jsonObj)
+days = parse_json(jsonObj)
 
-print(tt.days)
+print(days)
 
 
