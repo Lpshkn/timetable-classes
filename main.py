@@ -4,5 +4,8 @@ from parser_json.parser import Timetable
 import json
 
 jsonObj = DataJson('./resources/test.json')
-timetable = Timetable(jsonObj)
-print(timetable.days)
+tt = Timetable(jsonObj)
+
+print(tt.days)
+
+

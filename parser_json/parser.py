@@ -15,6 +15,12 @@ class Teacher:
         self.classroom = attributes[1]
         self.is_computer = attributes[2]
 
+    def __str__(self):
+        return f'{self.name}: groups={self.groups}, classroom={self.classroom}, iscomputer={self.is_computer}'
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class Note:
     """Represents an info about one lesson like 'title': list_of_teachers"""
@@ -25,14 +31,20 @@ class Note:
 
     def parse(self, list_info):
         """Sets a list of teachers with attributes"""
-        teachers = {}
+        teachers = []
         if len(list_info) != 0:
             for info in list_info:
                 if len(info) != 0:
                     name = info[NAME_INDEX]
                     attributes = list([info[GROUPS_INDEX], info[CLASSROOM_INDEX], info[IS_COMPUTER_INDEX]])
-                    teachers[name] = Teacher(name, attributes)
+                    teachers.append(Teacher(name, attributes))
         return teachers or None
+
+    def __str__(self):
+        return f'{self.title}: [{self.teachers}]'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class Day:
@@ -47,6 +59,13 @@ class Day:
         for title in list_notes.keys():
             notes[title] = Note(title, list_notes[title])
         return notes
+
+    def __str__(self):
+        return f'\n{self.date}:\n' \
+               f'   {self.notes.values()}'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class Timetable:
