@@ -22,29 +22,24 @@ class Teacher:
         return self.__str__()
 
 
-class Note:
-    """Represents an info about one lesson like 'title': list_of_teachers"""
+def parse_teachers(list_info):
+    """Gets a list of teachers with attributes"""
+    teachers = []
+    if len(list_info) != 0:
+        for info in list_info:
+            if len(info) != 0:
+                name = info[NAME_INDEX]
+                attributes = [info[GROUPS_INDEX], info[CLASSROOM_INDEX], info[IS_COMPUTER_INDEX]]
+                teachers.append(Teacher(name, attributes))
+    return teachers or None
 
-    def __init__(self, title, list_info: list):
-        self.title = title
-        self.teachers = self.parse(list_info)
 
-    def parse(self, list_info):
-        """Sets a list of teachers with attributes"""
-        teachers = []
-        if len(list_info) != 0:
-            for info in list_info:
-                if len(info) != 0:
-                    name = info[NAME_INDEX]
-                    attributes = list([info[GROUPS_INDEX], info[CLASSROOM_INDEX], info[IS_COMPUTER_INDEX]])
-                    teachers.append(Teacher(name, attributes))
-        return teachers or None
-
-    def __str__(self):
-        return f'{self.title}: [{self.teachers}]'
-
-    def __repr__(self):
-        return self.__str__()
+def parse_notes(list_notes: dict):
+    """Gets a list of notes classes like 'title' : list_of_teachers_with_attributes """
+    notes = {}
+    for key, value in list_notes.items():
+        notes[key] = parse_teachers(value)
+    return notes
 
 
 class Day:
@@ -52,17 +47,11 @@ class Day:
 
     def __init__(self, date, list_notes: dict):
         self.date = date
-        self.notes = self.parse(list_notes)
-
-    def parse(self, list_notes: dict):
-        notes = {}
-        for title in list_notes.keys():
-            notes[title] = Note(title, list_notes[title])
-        return notes
+        self.notes = parse_notes(list_notes)
 
     def __str__(self):
         return f'\n{self.date}:\n' \
-               f'   {self.notes.values()}'
+               f'   {self.notes}'
 
     def __repr__(self):
         return self.__str__()
