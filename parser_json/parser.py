@@ -1,3 +1,15 @@
+"""Each value in the Json-object represents as
+{
+    'Date':
+            {
+                'Note_1' : list_info_about_teachers,
+                ...
+                'Note_4' : list_info_about_teachers
+            }
+}
+Therefore, there is defines a parser of json-object, then defines a parser of Notes and list of teachers
+with theirs attributes(name, groups, classroom, is computer)"""
+
 from read_data.data_json import DataJson
 
 NAME_INDEX = 0
@@ -37,29 +49,14 @@ def parse_teachers(list_info):
 def parse_notes(list_notes: dict):
     """Gets a list of notes classes like 'title' : list_of_teachers_with_attributes """
     notes = {}
-    for key, value in list_notes.items():
-        notes[key] = parse_teachers(value)
+    for title, value in list_notes.items():
+        notes[title] = parse_teachers(value)
     return notes
 
 
-class Day:
-    """Represents an info about a day"""
-
-    def __init__(self, date, list_notes: dict):
-        self.date = date
-        self.notes = parse_notes(list_notes)
-
-    def __str__(self):
-        return f'\n{self.date}:\n' \
-               f'   {self.notes}'
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class Timetable:
-    def __init__(self, json_object: DataJson):
-        self.days = self.parse(json_object.json)
-
-    def parse(self, json: dict):
-        return [Day(day, json[day]) for day in json.keys()]
+def parse_json(json_object: DataJson):
+    """Function parses json object to a list of days"""
+    days = {}
+    for date, value in json_object.json.items():
+        days[date] = parse_notes(value)
+    return days
