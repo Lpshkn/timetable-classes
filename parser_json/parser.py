@@ -72,9 +72,3 @@ class Teacher:
         self.groups = attributes[0]
         self.classroom = attributes[1]
         self.is_computer = attributes[2]
-
-    def __str__(self):
-        return f'{self.name}: groups={self.groups}, classroom={self.classroom}, iscomputer={self.is_computer}'
-
-    def __repr__(self):
-        return self.__str__()
