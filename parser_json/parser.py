@@ -7,7 +7,8 @@
                 'Note_4' : list_info_about_teachers
             }
 }
-Therefore, there is defines a parser of json-object, then defines a parser of Notes and list of teachers
+Therefore, there is defines a parser of json-object,
+then defines a parser of Notes and list of teachers
 with theirs attributes(name, groups, classroom, is computer)"""
 
 from read_data.data_json import DataJson
@@ -21,9 +22,9 @@ IS_COMPUTER_INDEX = 3
 def parse_teachers(list_info) -> tuple:
     """Gets a list of teachers with attributes"""
     teachers = []
-    if len(list_info) != 0:
+    if not list_info:
         for info in list_info:
-            if len(info) != 0:
+            if not info:
                 name = info[NAME_INDEX]
                 attributes = [info[GROUPS_INDEX], info[CLASSROOM_INDEX], info[IS_COMPUTER_INDEX]]
                 teachers.append(Teacher(name, attributes))
@@ -53,15 +54,31 @@ def parse_json(json_object: DataJson) -> tuple:
 
 
 class Day:
+    """Class contains info about educational day like: date - notes"""
     def __init__(self, date, notes):
         self.date = date
         self.notes = notes
 
+    def __str__(self):
+        return f'{self.date}:' \
+               f'           {self.notes}'
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class Note:
+    """Class represents info about note of lesson like: title - list of teachers"""
     def __init__(self, title, teachers):
         self.title = title
         self.teachers = teachers
+
+    def __str__(self):
+        return f'{self.title}:' \
+               f'              {self.teachers}'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class Teacher:
@@ -72,3 +89,9 @@ class Teacher:
         self.groups = attributes[0]
         self.classroom = attributes[1]
         self.is_computer = attributes[2]
+
+    def __str__(self):
+        return f'{self.name}: {self.groups}, {self.classroom}'
+
+    def __repr__(self):
+        return self.__str__()

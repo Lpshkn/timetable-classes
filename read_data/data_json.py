@@ -1,3 +1,4 @@
+"""Module provides wrapper class for JSON-object to receive from file"""
 import json
 
 

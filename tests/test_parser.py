@@ -5,10 +5,10 @@ import json
 import read_data.data_json as dj
 import parser_json.parser as parser
 
-
+@unittest.skip('not ready')
 class ParserTest(unittest.TestCase):
     def test_parse(self):
-        json_obj = parser.DataJson('tests_resources/test.json')
+        json_obj = parser.DataJson('./tests/tests_resources/test.json')
         tt = parser.Timetable(json_obj)
         print(tt.days)
 

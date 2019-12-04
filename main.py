@@ -7,5 +7,3 @@ from excel_write.excel_write import write
 jsonObj = DataJson('./resources/test.json')
 days = parse_json(jsonObj)
 write(days)
-
-

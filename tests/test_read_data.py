@@ -11,7 +11,7 @@ class LoadDataTest(unittest.TestCase):
 
     def test_incorrect_file(self):
         with self.assertRaises(json.decoder.JSONDecodeError):
-            dj.load_data('./data.txt')
+            dj.load_data('./tests/tests_resources/data.txt')
 
 
 if __name__ == '__main__':
