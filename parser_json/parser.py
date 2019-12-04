@@ -18,7 +18,7 @@ CLASSROOM_INDEX = 2
 IS_COMPUTER_INDEX = 3
 
 
-def parse_teachers(list_info):
+def parse_teachers(list_info) -> tuple:
     """Gets a list of teachers with attributes"""
     teachers = []
     if len(list_info) != 0:
@@ -30,23 +30,25 @@ def parse_teachers(list_info):
     return tuple(teachers) or None
 
 
-def parse_notes(list_notes: dict):
+def parse_notes(list_notes: dict) -> tuple:
     """Gets a list of notes classes like 'title' : list_of_teachers_with_attributes """
     notes = []
     for title, value in list_notes.items():
         teachers = parse_teachers(value)
-        note = Note(title, teachers)
-        notes.append(note)
-    return tuple(notes)
+        if teachers is not None:
+            note = Note(title, teachers)
+            notes.append(note)
+    return tuple(notes) or None
 
 
-def parse_json(json_object: DataJson):
+def parse_json(json_object: DataJson) -> tuple:
     """Function parses json object to a list of days"""
     days = []
     for date, value in json_object.json.items():
         notes = parse_notes(value)
-        day = Day(date, value)
-        days.append(day)
+        if notes is not None:
+            day = Day(date, notes)
+            days.append(day)
     return tuple(days)
 
 
