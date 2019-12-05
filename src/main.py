@@ -16,7 +16,7 @@ def arguments_parser():
     parser.add_argument('-o', '--output',
                         help='output .xlsx file (default="output.xlsx")',
                         default='output.xlsx',
-                        type=ap.FileType('w'))
+                        type=str)
 
     return parser
 
@@ -26,7 +26,7 @@ def main():
 
     jsonObj = load_data(args.input.name)
     days = parse_json(jsonObj)
-    write(days, args.output.name)
+    write(days, args.output)
 
 
 if __name__ == '__main__':
