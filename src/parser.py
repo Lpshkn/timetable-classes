@@ -10,7 +10,7 @@
 Therefore, there is defines a parser of json-object, then defines a parser of Notes and list of teachers
 with theirs attributes(name, groups, classroom, is computer)"""
 
-from src.data_json import DataJson
+from src.data_json import load_data
 
 NAME_INDEX = 0
 GROUPS_INDEX = 1
@@ -41,10 +41,10 @@ def parse_notes(list_notes: dict) -> tuple:
     return tuple(notes) or None
 
 
-def parse_json(json_object: DataJson) -> tuple:
+def parse_json(json_object: dict) -> tuple:
     """Function parses json object to a list of days"""
     days = []
-    for date, value in json_object.json.items():
+    for date, value in json_object.items():
         notes = parse_notes(value)
         if notes is not None:
             day = Day(date, notes)
