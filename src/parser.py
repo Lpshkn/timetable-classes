@@ -59,13 +59,6 @@ class Day:
         self.date = date
         self.notes = notes
 
-    def __str__(self):
-        return f'{self.date}:' \
-               f'           {self.notes}'
-
-    def __repr__(self):
-        return self.__str__()
-
 
 class Note:
     """Class represents info about note of lesson like: title - list of teachers"""
@@ -73,12 +66,9 @@ class Note:
         self.title = title
         self.teachers = teachers
 
-    def __str__(self):
-        return f'{self.title}:' \
-               f'              {self.teachers}'
-
-    def __repr__(self):
-        return self.__str__()
+    def __eq__(self, other):
+        return self.title == other.title and self.teachers == other.teachers \
+            if isinstance(other, Note) else False
 
 
 class Teacher:
@@ -90,8 +80,6 @@ class Teacher:
         self.classroom = attributes[1]
         self.is_computer = attributes[2]
 
-    def __str__(self):
-        return f'{self.name}: {self.groups}, {self.classroom}'
-
-    def __repr__(self):
-        return self.__str__()
+    def __eq__(self, other):
+        return self.name == other.name and self.groups == other.groups and self.classroom == other.classroom \
+               and self.is_computer == other.is_computer if isinstance(other, Teacher) else False
