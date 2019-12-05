@@ -19,3 +19,8 @@ This is a parser of JSON files to Excel table.
 
 
 
+##Example:
+
+This command converts my_json_file.json (JSON file) to file.xlsx (Excel file)  
+
+```timetable-classes -o file.xlsx my_json_file.json```
