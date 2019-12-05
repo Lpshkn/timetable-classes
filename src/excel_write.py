@@ -15,7 +15,7 @@ THIN_BORDER = Border(left=Side(style='thin'),
                      bottom=Side(style='thin'))
 
 
-def write(days):
+def write(days, output):
     """Fuctions writes data in .xlsx file"""
     work_book = xl.Workbook()
     sheet = work_book.active
@@ -77,4 +77,4 @@ def write(days):
     sheet.column_dimensions['C'].width = max_len_grp + 2
     sheet.column_dimensions['D'].width = max_len_cls + 2
 
-    work_book.save('1.xlsx')
+    work_book.save(output)
