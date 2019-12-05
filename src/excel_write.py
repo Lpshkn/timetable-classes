@@ -1,3 +1,5 @@
+"""This module writes data received from json-object to .xlsx file"""
+
 import openpyxl as xl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles.alignment import Alignment
@@ -14,15 +16,17 @@ THIN_BORDER = Border(left=Side(style='thin'),
 
 
 def write(days):
-    wb = xl.Workbook()
-    sheet = wb.active
+    """Fuctions writes data in .xlsx file"""
+    work_book = xl.Workbook()
+    sheet = work_book.active
 
     max_len_title = max_len_teach = max_len_grp = max_len_cls = 0
 
     cur_row = 1
     for day in days:
         # Merge cells to setup the date
-        sheet.merge_cells(start_column=COL_TITLE, end_column=COL_CLASSROOM, start_row=cur_row, end_row=cur_row)
+        sheet.merge_cells(start_column=COL_TITLE, end_column=COL_CLASSROOM,
+                          start_row=cur_row, end_row=cur_row)
 
         # Setup the date of the day at the top of each table block and increment st_row number
         cell = sheet.cell(cur_row, COL_TITLE)
@@ -38,7 +42,8 @@ def write(days):
         for note in day.notes:
             # Setup end_row value to then merge cells
             e_row = cur_row + len(note.teachers) - 1
-            sheet.merge_cells(start_row=cur_row, end_row=e_row, start_column=COL_TITLE, end_column=COL_TITLE)
+            sheet.merge_cells(start_row=cur_row, end_row=e_row,
+                              start_column=COL_TITLE, end_column=COL_TITLE)
 
             # Setup the title
             cell = sheet.cell(cur_row, COL_TITLE)
@@ -72,4 +77,4 @@ def write(days):
     sheet.column_dimensions['C'].width = max_len_grp + 2
     sheet.column_dimensions['D'].width = max_len_cls + 2
 
-    wb.save('1.xlsx')
+    work_book.save('1.xlsx')
