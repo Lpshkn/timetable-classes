@@ -10,7 +10,7 @@
 Therefore, there is defines a parser of json-object, then defines a parser of Notes and list of teachers
 with theirs attributes(name, groups, classroom, is computer)"""
 
-from read_data.data_json import DataJson
+from src.data_json import DataJson
 
 NAME_INDEX = 0
 GROUPS_INDEX = 1

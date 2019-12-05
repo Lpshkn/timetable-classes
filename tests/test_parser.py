@@ -1,9 +1,7 @@
 """Test for the parser module"""
 
 import unittest
-import json
-import read_data.data_json as dj
-import parser_json.parser as parser
+import src.parser as parser
 
 
 class ParserTest(unittest.TestCase):

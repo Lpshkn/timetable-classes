@@ -1,7 +1,7 @@
 """Test for the load module"""
 import unittest
 import json
-import read_data.data_json as dj
+import src.data_json as dj
 
 
 class LoadDataTest(unittest.TestCase):
