@@ -4,10 +4,12 @@ import openpyxl as xl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles.alignment import Alignment
 
-COL_TITLE = 1
-COL_TEACH = 2
-COL_GROUP = 3
-COL_CLASSROOM = 4
+COLUMNS = {
+    'title': 1,
+    'teacher': 2,
+    'groups': 3,
+    'class': 4
+}
 
 THIN_BORDER = Border(left=Side(style='thin'),
                      right=Side(style='thin'),
@@ -15,66 +17,82 @@ THIN_BORDER = Border(left=Side(style='thin'),
                      bottom=Side(style='thin'))
 
 
+class ExcelParser:
+    def __init__(self):
+        self.cur_row = 1
+        self.len_title = 0
+        self.len_teacher = 0
+        self.len_classroom = 0
+        self.len_groups = 0
+        self.work_book = xl.Workbook()
+
+
 def write(days, output):
-    """Fuctions writes data in .xlsx file"""
-    work_book = xl.Workbook()
-    sheet = work_book.active
+    """Functions writes data in .xlsx file"""
+    xl_parser = ExcelParser()
+    work_book = xl_parser.work_book
+    sheet = work_book.get_active_sheet()
 
-    max_len_title = max_len_teach = max_len_grp = max_len_cls = 0
+    setup_days(days, xl_parser)
 
-    cur_row = 1
+    # Setup the width of columns
+    # This parameter is required to align columns in the table
+    alignment_parameter = 2
+    sheet.column_dimensions['A'].width = xl_parser.len_title + alignment_parameter
+    sheet.column_dimensions['B'].width = xl_parser.len_teacher + alignment_parameter
+    sheet.column_dimensions['C'].width = xl_parser.len_groups + alignment_parameter
+    sheet.column_dimensions['D'].width = xl_parser.len_classroom + alignment_parameter
+
+    work_book.save(output)
+
+
+def setup_days(days, xl_parser):
+    sheet = xl_parser.work_book.get_active_sheet()
     for day in days:
         # Merge cells to setup the date
-        sheet.merge_cells(start_column=COL_TITLE, end_column=COL_CLASSROOM,
-                          start_row=cur_row, end_row=cur_row)
+        sheet.merge_cells(start_column=COLUMNS['title'], end_column=COLUMNS['class'],
+                          start_row=xl_parser.cur_row, end_row=xl_parser.cur_row)
 
         # Setup the date of the day at the top of each table block and increment st_row number
-        cell = sheet.cell(cur_row, COL_TITLE)
+        column = COLUMNS['title']
+        cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title'])
         cell.value = day.date
         cell.alignment = Alignment(horizontal='center')
 
         # Setup title's borders
-        for col in range(COL_TITLE, COL_CLASSROOM + 1):
-            sheet.cell(cur_row, col).border = THIN_BORDER
+        for column in range(COLUMNS['title'], COLUMNS['class'] + 1):
+            sheet.cell(row=xl_parser.cur_row, column=column).border = THIN_BORDER
 
-        cur_row += 1
+        xl_parser.cur_row += 1
 
         for note in day.notes:
             # Setup end_row value to then merge cells
-            e_row = cur_row + len(note.teachers) - 1
-            sheet.merge_cells(start_row=cur_row, end_row=e_row,
-                              start_column=COL_TITLE, end_column=COL_TITLE)
+            e_row = xl_parser.cur_row + len(note.teachers) - 1
+            sheet.merge_cells(start_row=xl_parser.cur_row, end_row=e_row,
+                              start_column=COLUMNS['title'], end_column=COLUMNS['title'])
 
             # Setup the title
-            cell = sheet.cell(cur_row, COL_TITLE)
+            cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title'])
             cell.value = note.title
             cell.border = THIN_BORDER
-            max_len_title = max(max_len_title, len(cell.value))
+            xl_parser.len_title = max(xl_parser.len_title, len(cell.value))
 
             # Setup each teacher with attributes into a row
             for teacher in note.teachers:
-                sheet.cell(cur_row, COL_TITLE).border = THIN_BORDER
+                sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title']).border = THIN_BORDER
 
-                cell = sheet.cell(cur_row, COL_TEACH)
+                cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['teacher'])
                 cell.value = teacher.name
                 cell.border = THIN_BORDER
-                max_len_teach = max(max_len_teach, len(cell.value))
+                xl_parser.len_teacher = max(xl_parser.len_teacher, len(cell.value))
 
-                cell = sheet.cell(cur_row, COL_GROUP)
+                cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['groups'])
                 cell.value = ', '.join(teacher.groups)
                 cell.border = THIN_BORDER
-                max_len_grp = max(max_len_grp, len(cell.value))
+                xl_parser.len_groups = max(xl_parser.len_groups, len(cell.value))
 
-                cell = sheet.cell(cur_row, COL_CLASSROOM)
+                cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['class'])
                 cell.value = str(teacher.classroom)
                 cell.border = THIN_BORDER
-                max_len_cls = max(max_len_cls, len(cell.value))
-                cur_row += 1
-
-    # Setup the width of columns
-    sheet.column_dimensions['A'].width = max_len_title + 2
-    sheet.column_dimensions['B'].width = max_len_teach + 2
-    sheet.column_dimensions['C'].width = max_len_grp + 2
-    sheet.column_dimensions['D'].width = max_len_cls + 2
-
-    work_book.save(output)
+                xl_parser.len_classroom = max(xl_parser.len_classroom, len(cell.value))
+                xl_parser.cur_row += 1
