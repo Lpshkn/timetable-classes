@@ -33,7 +33,8 @@ def write(days, output):
     work_book = xl_parser.work_book
     sheet = work_book.get_active_sheet()
 
-    setup_days(days, xl_parser)
+    for day in days:
+        write_day(day, xl_parser)
 
     # Setup the width of columns
     # This parameter is required to align columns in the table
@@ -46,53 +47,67 @@ def write(days, output):
     work_book.save(output)
 
 
-def setup_days(days, xl_parser):
+def write_day(day, xl_parser):
+    """Setup day to table cells"""
     sheet = xl_parser.work_book.get_active_sheet()
-    for day in days:
-        # Merge cells to setup the date
-        sheet.merge_cells(start_column=COLUMNS['title'], end_column=COLUMNS['class'],
-                          start_row=xl_parser.cur_row, end_row=xl_parser.cur_row)
 
-        # Setup the date of the day at the top of each table block and increment st_row number
-        column = COLUMNS['title']
-        cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title'])
-        cell.value = day.date
-        cell.alignment = Alignment(horizontal='center')
+    # Merge cells to setup the date
+    sheet.merge_cells(start_column=COLUMNS['title'], end_column=COLUMNS['class'],
+                      start_row=xl_parser.cur_row, end_row=xl_parser.cur_row)
 
-        # Setup title's borders
-        for column in range(COLUMNS['title'], COLUMNS['class'] + 1):
-            sheet.cell(row=xl_parser.cur_row, column=column).border = THIN_BORDER
+    # Setup the date of the day at the top of each table block and increment st_row number
+    cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title'])
+    cell.value = day.date
+    cell.alignment = Alignment(horizontal='center')
 
-        xl_parser.cur_row += 1
+    # Setup title's borders
+    for column in range(COLUMNS['title'], COLUMNS['class'] + 1):
+        sheet.cell(row=xl_parser.cur_row, column=column).border = THIN_BORDER
 
-        for note in day.notes:
-            # Setup end_row value to then merge cells
-            e_row = xl_parser.cur_row + len(note.teachers) - 1
-            sheet.merge_cells(start_row=xl_parser.cur_row, end_row=e_row,
-                              start_column=COLUMNS['title'], end_column=COLUMNS['title'])
+    xl_parser.cur_row += 1
 
-            # Setup the title
-            cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title'])
-            cell.value = note.title
-            cell.border = THIN_BORDER
-            xl_parser.len_title = max(xl_parser.len_title, len(cell.value))
+    for note in day.notes:
+        write_note(note, xl_parser)
 
-            # Setup each teacher with attributes into a row
-            for teacher in note.teachers:
-                sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title']).border = THIN_BORDER
 
-                cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['teacher'])
-                cell.value = teacher.name
-                cell.border = THIN_BORDER
-                xl_parser.len_teacher = max(xl_parser.len_teacher, len(cell.value))
+def write_note(note, xl_parser):
+    """Setup note to table cells that contains info about lessons"""
+    sheet = xl_parser.work_book.get_active_sheet()
 
-                cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['groups'])
-                cell.value = ', '.join(teacher.groups)
-                cell.border = THIN_BORDER
-                xl_parser.len_groups = max(xl_parser.len_groups, len(cell.value))
+    # Setup end_row value to then merge cells
+    e_row = xl_parser.cur_row + len(note.teachers) - 1
+    sheet.merge_cells(start_row=xl_parser.cur_row, end_row=e_row,
+                      start_column=COLUMNS['title'], end_column=COLUMNS['title'])
 
-                cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['class'])
-                cell.value = str(teacher.classroom)
-                cell.border = THIN_BORDER
-                xl_parser.len_classroom = max(xl_parser.len_classroom, len(cell.value))
-                xl_parser.cur_row += 1
+    # Setup the title
+    cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title'])
+    cell.value = note.title
+    cell.border = THIN_BORDER
+    xl_parser.len_title = max(xl_parser.len_title, len(cell.value))
+
+    # Setup each teacher with attributes into a row
+    for teacher in note.teachers:
+        write_teacher(teacher, xl_parser)
+
+
+def write_teacher(teacher, xl_parser):
+    """Setup teacher to cells table that contain info about teacher such as name, groups and classroom"""
+    sheet = xl_parser.work_book.get_active_sheet()
+
+    sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title']).border = THIN_BORDER
+
+    cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['teacher'])
+    cell.value = teacher.name
+    cell.border = THIN_BORDER
+    xl_parser.len_teacher = max(xl_parser.len_teacher, len(cell.value))
+
+    cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['groups'])
+    cell.value = ', '.join(teacher.groups)
+    cell.border = THIN_BORDER
+    xl_parser.len_groups = max(xl_parser.len_groups, len(cell.value))
+
+    cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['class'])
+    cell.value = str(teacher.classroom)
+    cell.border = THIN_BORDER
+    xl_parser.len_classroom = max(xl_parser.len_classroom, len(cell.value))
+    xl_parser.cur_row += 1
