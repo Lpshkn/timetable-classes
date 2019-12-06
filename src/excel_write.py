@@ -2,6 +2,7 @@
 
 import openpyxl as xl
 from openpyxl.styles.borders import Border, Side
+from openpyxl.styles.fonts import Font
 from openpyxl.styles.alignment import Alignment
 
 COLUMNS = {
@@ -13,13 +14,14 @@ COLUMNS = {
 
 
 def border(style):
+    """Return a necessary border"""
     return Border(left=Side(style=style),
                   right=Side(style=style),
                   top=Side(style=style),
                   bottom=Side(style=style))
 
 
-class ExcelParser:
+class ExcelWriter:
     def __init__(self):
         self.cur_row = 1
         self.len_title = 0
@@ -31,7 +33,7 @@ class ExcelParser:
 
 def write(days, output):
     """Functions writes data in .xlsx file"""
-    xl_parser = ExcelParser()
+    xl_parser = ExcelWriter()
     work_book = xl_parser.work_book
     sheet = work_book.get_active_sheet()
 
@@ -57,15 +59,17 @@ def write_day(day, xl_parser):
     sheet.merge_cells(start_column=COLUMNS['title'], end_column=COLUMNS['class'],
                       start_row=xl_parser.cur_row, end_row=xl_parser.cur_row)
 
-    # Setup the date of the day at the top of each table block and increment st_row number
+    # Setup the date of the day at the center and bold it
     cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title'])
     cell.value = day.date
     cell.alignment = Alignment(horizontal='center')
+    cell.font = Font(bold=True)
 
     # Setup title's borders
     for column in range(COLUMNS['title'], COLUMNS['class'] + 1):
         sheet.cell(row=xl_parser.cur_row, column=column).border = border('medium')
 
+    # Iterate rows of the table
     xl_parser.cur_row += 1
 
     for note in day.notes:
@@ -89,6 +93,9 @@ def write_note(note, xl_parser):
 
     # Setup each teacher with attributes into a row
     for teacher in note.teachers:
+        # Setup border to title cells (in each cell)
+        sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title']).border = border('thin')
+
         write_teacher(teacher, xl_parser)
 
 
@@ -96,20 +103,24 @@ def write_teacher(teacher, xl_parser):
     """Setup teacher to cells table that contain info about teacher such as name, groups and classroom"""
     sheet = xl_parser.work_book.get_active_sheet()
 
-    sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title']).border = border('thin')
-
+    # Setup teacher's name cell
     cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['teacher'])
     cell.value = teacher.name
     cell.border = border('thin')
     xl_parser.len_teacher = max(xl_parser.len_teacher, len(cell.value))
 
+    # Setup groups cell
     cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['groups'])
     cell.value = 'гр. ' + ', '.join(teacher.groups)
     cell.border = border('thin')
     xl_parser.len_groups = max(xl_parser.len_groups, len(cell.value))
 
+    # Setup classroom cell with is_computer parameter
     cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['class'])
-    cell.value = 'aуд. ' + str(teacher.classroom)
+    cell_val = 'aуд. ' + str(teacher.classroom)
+    cell.value = cell_val + ' (комп.)' if teacher.is_computer else cell_val
     cell.border = border('thin')
     xl_parser.len_classroom = max(xl_parser.len_classroom, len(cell.value))
+
+    # Iteration of teachers
     xl_parser.cur_row += 1
