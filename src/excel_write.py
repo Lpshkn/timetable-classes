@@ -11,10 +11,12 @@ COLUMNS = {
     'class': 4
 }
 
-THIN_BORDER = Border(left=Side(style='thin'),
-                     right=Side(style='thin'),
-                     top=Side(style='thin'),
-                     bottom=Side(style='thin'))
+
+def border(style):
+    return Border(left=Side(style=style),
+                  right=Side(style=style),
+                  top=Side(style=style),
+                  bottom=Side(style=style))
 
 
 class ExcelParser:
@@ -62,7 +64,7 @@ def write_day(day, xl_parser):
 
     # Setup title's borders
     for column in range(COLUMNS['title'], COLUMNS['class'] + 1):
-        sheet.cell(row=xl_parser.cur_row, column=column).border = THIN_BORDER
+        sheet.cell(row=xl_parser.cur_row, column=column).border = border('medium')
 
     xl_parser.cur_row += 1
 
@@ -82,7 +84,7 @@ def write_note(note, xl_parser):
     # Setup the title
     cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title'])
     cell.value = note.title
-    cell.border = THIN_BORDER
+    cell.border = border('thin')
     xl_parser.len_title = max(xl_parser.len_title, len(cell.value))
 
     # Setup each teacher with attributes into a row
@@ -94,20 +96,20 @@ def write_teacher(teacher, xl_parser):
     """Setup teacher to cells table that contain info about teacher such as name, groups and classroom"""
     sheet = xl_parser.work_book.get_active_sheet()
 
-    sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title']).border = THIN_BORDER
+    sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title']).border = border('thin')
 
     cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['teacher'])
     cell.value = teacher.name
-    cell.border = THIN_BORDER
+    cell.border = border('thin')
     xl_parser.len_teacher = max(xl_parser.len_teacher, len(cell.value))
 
     cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['groups'])
-    cell.value = ', '.join(teacher.groups)
-    cell.border = THIN_BORDER
+    cell.value = 'гр. ' + ', '.join(teacher.groups)
+    cell.border = border('thin')
     xl_parser.len_groups = max(xl_parser.len_groups, len(cell.value))
 
     cell = sheet.cell(row=xl_parser.cur_row, column=COLUMNS['class'])
-    cell.value = str(teacher.classroom)
-    cell.border = THIN_BORDER
+    cell.value = 'aуд. ' + str(teacher.classroom)
+    cell.border = border('thin')
     xl_parser.len_classroom = max(xl_parser.len_classroom, len(cell.value))
     xl_parser.cur_row += 1
