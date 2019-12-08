@@ -1,9 +1,9 @@
+import sys
+import argparse as ap
 from src.parser import parse_json
 from src.excel_write import write
 from src.data_json import load_data
 from src.sort_data import sort_data
-import sys
-import argparse as ap
 
 
 def arguments_parser():
@@ -33,4 +33,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

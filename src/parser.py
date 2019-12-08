@@ -11,6 +11,8 @@ Therefore, there is defines a parser of json-object,
 then defines a parser of Notes and list of teachers
 with theirs attributes(name, groups, classroom, is computer)"""
 
+# pylint: disable=too-few-public-methods
+
 from src.data_json import load_data
 
 NAME_INDEX = 0
@@ -81,5 +83,7 @@ class Teacher:
         self.is_computer = attributes[2]
 
     def __eq__(self, other):
-        return self.name == other.name and self.groups == other.groups and self.classroom == other.classroom \
-               and self.is_computer == other.is_computer if isinstance(other, Teacher) else False
+        return self.name == other.name and self.groups == other.groups \
+               and self.classroom == other.classroom \
+               and self.is_computer == other.is_computer \
+            if isinstance(other, Teacher) else False
