@@ -1,6 +1,7 @@
 from src.parser import parse_json
 from src.excel_write import write
 from src.data_json import load_data
+from src.sort_data import sort_data
 import sys
 import argparse as ap
 
@@ -24,8 +25,9 @@ def arguments_parser():
 def main():
     args = arguments_parser().parse_args(sys.argv[1:])
 
-    jsonObj = load_data(args.input.name)
-    days = parse_json(jsonObj)
+    json_object = load_data(args.input.name)
+    json_object = sort_data(json_object)
+    days = parse_json(json_object)
     write(days, args.output)
 
 
