@@ -72,6 +72,9 @@ def write_day(day, xl_parser):
     # Iterate rows of the table
     xl_parser.cur_row += 1
 
+    for kvant in day.kvants:
+        write_note(kvant, xl_parser)
+
     for note in day.notes:
         write_note(note, xl_parser)
 
@@ -95,7 +98,6 @@ def write_note(note, xl_parser):
     for teacher in note.teachers:
         # Setup border to title cells (in each cell)
         sheet.cell(row=xl_parser.cur_row, column=COLUMNS['title']).border = border('thin')
-
         write_teacher(teacher, xl_parser)
 
 
