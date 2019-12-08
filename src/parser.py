@@ -21,7 +21,7 @@ CLASSROOM_INDEX = 2
 IS_COMPUTER_INDEX = 3
 
 
-def parse_teachers(list_info) -> tuple:
+def parse_teachers(list_info):
     """Gets a list of teachers with attributes"""
     teachers = []
     if list_info:
@@ -30,40 +30,55 @@ def parse_teachers(list_info) -> tuple:
                 name = info[NAME_INDEX]
                 attributes = [info[GROUPS_INDEX], info[CLASSROOM_INDEX], info[IS_COMPUTER_INDEX]]
                 teachers.append(Teacher(name, attributes))
-    return tuple(teachers) or None
+    return teachers or None
 
 
-def parse_notes(list_notes: dict) -> tuple:
+def parse_notes(list_notes: dict, kvant=False) -> tuple:
     """Gets a list of notes classes like 'title' : list_of_teachers_with_attributes """
-    notes = []
+    kvants = set()
+    notes = [[], []]
+
     for title, value in list_notes.items():
         teachers = parse_teachers(value)
-        if teachers is not None:
-            note = Note(title, teachers)
-            notes.append(note)
-    return tuple(notes) or None
+        if teachers:
+            if kvant:
+                for teacher in teachers:
+                    if teacher.is_kvant:
+                        kvants.add(teacher)
+                        teachers.remove(teacher)
+
+            if teachers:
+                notes[0].append(Note(title, teachers))
+
+    if kvants:
+        notes[1].append(Note("K", kvants))
+
+    return tuple(notes) if notes[0] or notes[1] else None
 
 
-def parse_json(json_object: dict) -> tuple:
+def parse_json(json_object: dict, kvant=False) -> tuple:
     """Function parses json object to a list of days"""
     days = []
     for date, value in json_object.items():
-        notes = parse_notes(value)
-        if notes is not None:
+        notes = parse_notes(value, kvant)
+        if notes:
             day = Day(date, notes)
             days.append(day)
-    return tuple(days)
+    return tuple(days) or None
 
 
 class Day:
     """Class contains info about educational day like: date - notes"""
+
     def __init__(self, date, notes):
         self.date = date
-        self.notes = notes
+        self.notes = notes[0]
+        self.kvants = notes[1]
 
 
 class Note:
     """Class represents info about note of lesson like: title - list of teachers"""
+
     def __init__(self, title, teachers):
         self.title = title
         self.teachers = teachers
@@ -81,9 +96,19 @@ class Teacher:
         self.groups = attributes[0]
         self.classroom = attributes[1]
         self.is_computer = attributes[2]
+        self.is_kvant = True if 'КВАНТ' in self.classroom else False
 
     def __eq__(self, other):
         return self.name == other.name and self.groups == other.groups \
                and self.classroom == other.classroom \
                and self.is_computer == other.is_computer \
             if isinstance(other, Teacher) else False
+
+    def __hash__(self):
+        hash_sum = hash(self.name) + hash(self.is_kvant) + \
+                   hash(self.classroom) + hash(self.is_computer)
+
+        for group in self.groups:
+            hash_sum += hash(group)
+
+        return hash(hash_sum)

@@ -19,6 +19,10 @@ def arguments_parser():
                         default='output.xlsx',
                         type=str)
 
+    parser.add_argument('-k', '--kvant',
+                        help='move information about lessons in KVANT to the first line under date',
+                        action='store_true')
+
     return parser
 
 
@@ -27,7 +31,7 @@ def main():
 
     json_object = load_data(args.input.name)
     json_object = sort_data(json_object)
-    days = parse_json(json_object)
+    days = parse_json(json_object, args.kvant)
     write(days, args.output)
 
 
