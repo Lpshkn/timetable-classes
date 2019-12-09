@@ -56,12 +56,13 @@ def write_day(day, xl_parser):
     """Setup day to table cells"""
     sheet = xl_parser.work_book.get_active_sheet()
 
+    # Count summary rows in the day
     sum_rows = 0
     for it in day.notes + day.kvants:
         sum_rows += len(it.teachers)
 
     # Shift the pointer to setup the table without splitting days
-    while (xl_parser.cur_row % SHIFT_ROW) + sum_rows > SHIFT_ROW:
+    while xl_parser.cur_row % SHIFT_ROW == 0 or (xl_parser.cur_row % SHIFT_ROW) + sum_rows > SHIFT_ROW:
         xl_parser.cur_row += 1
 
     # Merge cells to setup the date
