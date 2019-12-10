@@ -1,5 +1,6 @@
 """This module is required for sorting data by date"""
 from collections import OrderedDict
+import datetime as dt
 
 MONTHS = {"января": 1,
           "февраля": 2,
@@ -13,6 +14,8 @@ MONTHS = {"января": 1,
           "октября": 10,
           "ноября": 11,
           "декабря": 12}
+
+WEEKDAY = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
 
 
 def sort_data(json_object):
@@ -29,3 +32,10 @@ def sort_data(json_object):
 
     # Put sorted data into the ordered dict
     return OrderedDict(list_data)
+
+
+def to_date(date):
+    day, month = date.split(' ')
+    year = dt.datetime.today().year
+
+    return dt.date(year, MONTHS[month], int(day))
