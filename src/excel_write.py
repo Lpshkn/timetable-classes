@@ -14,6 +14,7 @@ COLUMNS = {
 
 SHIFT_ROW = 50
 
+
 def border(style):
     """Return a necessary border"""
     return Border(left=Side(style=style),
@@ -37,6 +38,10 @@ def write(days, output):
     xl_parser = ExcelWriter()
     work_book = xl_parser.work_book
     sheet = work_book.get_active_sheet()
+
+    # Setup standard margins to print the table without splits
+    sheet.page_margins.top = 0.764
+    sheet.page_margins.bottom = 0.764
 
     for day in days:
         write_day(day, xl_parser)
