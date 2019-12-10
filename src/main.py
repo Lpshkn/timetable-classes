@@ -3,7 +3,7 @@ import argparse as ap
 from src.parser import parse_json
 from src.excel_write import write
 from src.data_json import load_data
-from src.sort_data import sort_data
+from src.date import sort_data
 
 
 def arguments_parser():
@@ -23,6 +23,10 @@ def arguments_parser():
                         help='move information about lessons in KVANT to the first line under date',
                         action='store_true')
 
+    parser.add_argument('-d', '--date',
+                        help='write information about days between these dates',
+                        type=str)
+
     return parser
 
 
@@ -31,7 +35,7 @@ def main():
 
     json_object = load_data(args.input.name)
     json_object = sort_data(json_object)
-    days = parse_json(json_object, args.kvant)
+    days = parse_json(json_object, args.kvant, args.date)
     write(days, args.output)
 
 
