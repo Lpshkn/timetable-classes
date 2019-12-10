@@ -14,6 +14,7 @@ with theirs attributes(name, groups, classroom, is computer)"""
 # pylint: disable=too-few-public-methods
 
 from src.data_json import load_data
+from src.date import to_date, WEEKDAY
 
 NAME_INDEX = 0
 GROUPS_INDEX = 1
@@ -56,13 +57,28 @@ def parse_notes(list_notes: dict, kvant=False) -> tuple:
     return tuple(notes) if notes[0] or notes[1] else None
 
 
-def parse_json(json_object: dict, kvant=False) -> tuple:
+def parse_json(json_object: dict, kvant=False, date_filter=None) -> tuple:
     """Function parses json object to a list of days"""
     days = []
+
+    if date_filter:
+        date_start, date_end = date_filter.split(':')
+        date_start = to_date(date_start)
+        date_end = to_date(date_end)
+
     for date, value in json_object.items():
+        date_object = to_date(date)
+
+        if date_filter:
+            if date_object < date_start:
+                continue
+            if date_object > date_end:
+                break
+
         notes = parse_notes(value, kvant)
         if notes:
-            day = Day(date, notes)
+            weekday = WEEKDAY[date_object.weekday()]
+            day = Day(date + ' (' + weekday + ')', notes)
             days.append(day)
     return tuple(days) or None
 
