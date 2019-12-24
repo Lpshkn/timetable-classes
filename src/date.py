@@ -37,12 +37,13 @@ def sort_data(json_object):
 
 def to_date(date):
     # Handle format date as 'dd.mm'
-    if re.search('^(0?[1-9]|1[0-9]|2[0-9]|3[0-1])\.(0?[1-9]|1[0-2])$', date):
+    if re.search('^ *(0?[1-9]|1[0-9]|2[0-9]|3[0-1])\.(0?[1-9]|1[0-2]) *$', date):
+        date = date.strip()
         day, month = date.split('.')
         day = int(day); month = int(month)
 
     # Handle format date as 'dd month'
-    elif re.search('^(0?[1-9]|1[0-9]|2[0-9]|3[0-1]) [а-я]{3,8} *$', date):
+    elif re.search('^ *(0?[1-9]|1[0-9]|2[0-9]|3[0-1]) [а-я]{3,8} *$', date):
         date = date.strip()
         day, month = date.split(' ')
         day = int(day); month = MONTHS[month]
