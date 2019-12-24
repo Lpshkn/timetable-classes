@@ -1,6 +1,7 @@
 """This module is required for sorting data by date"""
 from collections import OrderedDict
 import datetime as dt
+import re
 
 MONTHS = {"января": 1,
           "февраля": 2,
@@ -35,7 +36,18 @@ def sort_data(json_object):
 
 
 def to_date(date):
-    day, month = date.split(' ')
-    year = dt.datetime.today().year
+    # Handle format date as 'dd.mm'
+    if re.search('^(0?[1-9]|1[0-9]|2[0-9]|3[0-1])\.(0?[1-9]|1[0-2])$', date):
+        day, month = date.split('.')
+        day = int(day); month = int(month)
 
-    return dt.date(year, MONTHS[month], int(day))
+    # Handle format date as 'dd month'
+    elif re.search('^(0?[1-9]|1[0-9]|2[0-9]|3[0-1]) [а-я]{3,8} *$', date):
+        date = date.strip()
+        day, month = date.split(' ')
+        day = int(day); month = MONTHS[month]
+    else:
+        raise Exception('Incorrect date range in -d parameter')
+
+    year = dt.datetime.today().year
+    return dt.date(year, month, day)
