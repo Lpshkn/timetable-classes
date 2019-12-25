@@ -13,7 +13,7 @@ Parses timetable of classes (input .xlsx file) to .xlsx file.
 ## Usage
 - ```git clone https://github.com/LeadNess/TimetableExcelParser.git```
 - ```cd TimetableExcelParser```
-- ```./build_for_linux``` or ```.\build_for_win```
+- Depending on the system: ```./build_for_linux``` or ```.\build_for_win.cmd```
 - ```TimetableExcelParser [-i, --input <input_xlsx> [-o, --output <output_xlsx>] [-d, --dates "dd.mm:dd.mm"] [-k, --kvant] [-l, --logs <logfile>] ```
 
 

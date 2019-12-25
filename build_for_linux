@@ -5,3 +5,4 @@ echo "Created virtual environment.."
 source ./venv/bin/activate
 pip install -r requirements.txt
 pyinstaller --onefile TimetableExcelParser.py
+echo "Successfully build ./dist/TimetableExcelParser"
