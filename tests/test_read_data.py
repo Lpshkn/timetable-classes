@@ -1,7 +1,7 @@
 """Test for the load module"""
 import unittest
 import json
-import src.data_json as dj
+import src.timetable_classes.data_json as dj
 
 
 class LoadDataTest(unittest.TestCase):

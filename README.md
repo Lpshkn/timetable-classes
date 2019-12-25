@@ -1,21 +1,17 @@
-# Timetable of classes
+# TimetableExcelParser
 ## Description
-This is a parser of JSON files to Excel table.
+Parses timetable of classes (input .xlsx file) to .xlsx file.
 
-##### Positional arguments:  
-
-```input``` - input JSON file
-
-##### Optional arguments:
-
-```-o, --output``` - output .xlsx file
-
-```-k, --kvant``` - move "special" lessons to the field under the date
-
-```-d, --date``` - print dates specify in date string
+##### Optional arguments:  
+    
+  ```-i, --input``` - input .xlsx file  
+  ```-o, --output``` - output .xlsx file  
+  ```-k, --kvant``` - move "special" lessons to the field under the date  
+  ```-d, --date``` - write information about days between current dates  
+  ```-l, --logs``` - logfile (default - logs.txt)  
 
 ## Usage
-- ```git clone https://github.com/Nikshepel/timetable-classes.git```
+- ```git clone https://github.com/LeadNess/TimetableExcelParser.git```
 - ```cd timetable-classes```
 - ```sudo python3 setup.py install```
 
@@ -23,18 +19,17 @@ This is a parser of JSON files to Excel table.
 
 
 
-## Example:
+## Example
 
-This command converts my_json_file.json (JSON file) to file.xlsx (Excel file)  
+This command converts timatable.xlsx to output.xlsx. Logfile logs.txt with information about skipped cells will be created in current folder: 
 
-```timetable-classes -o file.xlsx my_json_file.json```
+```TimetableExcelParser -i timatable.xlsx -o output.xlsx```
 
-This command creates .xlsx file which 'special lessons' are in the cell below the date and 
-prints only days specify in the this range
+This command converts timatable.xlsx to output.xlsx with lessons from specified time period, where 'special lessons' will be in the cell below the date:
 
-```timetable-classes -o file.xlsx -k -d '10.01:15.9' file.json```
+```TimetableExcelParser -i timatable.xlsx -o output.xlsx -k -d '10.01:15.9'```
 
-Option `-k` may be such as
+Option `-d` can be specified as:
 ```
 -d '01.01:10.12'
 -d '1.01:10.12'

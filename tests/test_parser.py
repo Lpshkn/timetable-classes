@@ -1,8 +1,8 @@
 """Test for the parser module"""
 
 import unittest
-import src.parser as parser
-from src.data_json import load_data
+import src.timetable_classes.parser as parser
+from src.timetable_classes.data_json import load_data
 
 class ParserTest(unittest.TestCase):
     def test_parse_teachers_none(self):
