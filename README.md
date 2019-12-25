@@ -11,6 +11,7 @@ Parses timetable of classes (input .xlsx file) to .xlsx file.
   ```-l, --logs``` - logfile (default - logs.txt)  
 
 ## Usage
+**WARNING**: When installed on windows requires python3 as 'python' in '%PATH" variable  
 - ```git clone https://github.com/LeadNess/TimetableExcelParser.git```
 - ```cd TimetableExcelParser```
 - Depending on the system: ```./build_for_linux``` or ```.\build_for_win.cmd```
