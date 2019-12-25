@@ -12,10 +12,9 @@ Parses timetable of classes (input .xlsx file) to .xlsx file.
 
 ## Usage
 - ```git clone https://github.com/LeadNess/TimetableExcelParser.git```
-- ```cd timetable-classes```
-- ```sudo python3 setup.py install```
-
-- ```timetable-classes [-o, --output <output_xlsx>] [-k] [-d "dd.mm:dd.mm"] json_file```
+- ```cd TimetableExcelParser```
+- ```./build_for_linux``` or ```.\build_for_win```
+- ```TimetableExcelParser [-i, --input <input_xlsx> [-o, --output <output_xlsx>] [-d, --dates "dd.mm:dd.mm"] [-k, --kvant] [-l, --logs <logfile>] ```
 
 
 
