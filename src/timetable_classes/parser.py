@@ -13,8 +13,8 @@ with theirs attributes(name, groups, classroom, is computer)"""
 
 # pylint: disable=too-few-public-methods
 
-from src.data_json import load_data
-from src.date import to_date, WEEKDAY
+from src.timetable_classes.data_json import load_data
+from src.timetable_classes.date import to_date, WEEKDAY
 
 NAME_INDEX = 0
 GROUPS_INDEX = 1
