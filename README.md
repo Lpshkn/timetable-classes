@@ -12,8 +12,8 @@ Parses timetable of classes (input .xlsx file) to .xlsx file.
 
 ## Usage
 **WARNING**: When installed on windows requires python3 as 'python' in '%PATH" variable  
-- ```git clone https://github.com/LeadNess/TimetableExcelParser.git```
-- ```cd TimetableExcelParser```
+- ```git clone https://github.com/Nikshepel/timetable-classes.git```
+- ```cd timetable-classes```
 - Depending on the system: ```./build_for_linux``` or ```powershell .\build_for_win.ps1```  
 Сreated executable file will be located in TimetableExcelParser/dist/
 - ```TimetableExcelParser [-i, --input <input_xlsx> [-o, --output <output_xlsx>] [-d, --dates "dd.mm:dd.mm"] [-k, --kvant] [-l, --logs <logfile>] ```
